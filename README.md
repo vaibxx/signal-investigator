@@ -2,8 +2,6 @@
 
 A bounded, tool-using agent for investigating a drop in an AI product’s evaluation pass rate. Did answer quality fall within a segment, or did the release receive a harder mix of questions?
 
-[Explore the portfolio demo](https://vaibxx.github.io/Vaibhav-Portfolio/#signal)
-
 ## Reproduce a run
 
 Requires Python 3.9+. The offline planner and the test suite use the standard library.
