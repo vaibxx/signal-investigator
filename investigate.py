@@ -75,6 +75,8 @@ def model_action(url, model, seen, remaining):
     body = {"model": model, "temperature": 0, "messages": [
         {"role": "system", "content": "Choose one remaining action. Respond only with a JSON object with string key action."},
         {"role": "user", "content": json.dumps(prompt)}]}
+    if url == "https://generativelanguage.googleapis.com/v1beta/openai/chat/completions":
+        body["response_format"] = {"type": "json_object"}
     headers = {"Content-Type": "application/json"}
     if os.environ.get("SIGNAL_API_KEY"):
         headers["Authorization"] = "Bearer " + os.environ["SIGNAL_API_KEY"]
