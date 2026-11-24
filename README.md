@@ -17,7 +17,13 @@ The traffic-shift example falls from 86% to 54%. Lookup questions still pass 90%
 
 ## Run the agent with a model
 
-Start a local server that supports the chat completions API, and supply the model identifier it serves:
+The [recorded Gemini run](examples/gemini-traffic-shift.json) shows each selected action, its measured evidence and the verdict. To reproduce it, configure `SIGNAL_API_KEY` privately and run:
+
+```sh
+python investigate.py --model gemini-3.5-flash-lite --endpoint https://generativelanguage.googleapis.com/v1beta/openai/chat/completions --scenario traffic-shift
+```
+
+For a local model, start a local server that supports the chat completions API, and supply the model identifier it serves:
 
 ```sh
 python investigate.py --model YOUR_MODEL --endpoint http://localhost:11434/v1/chat/completions --scenario mixed-change
