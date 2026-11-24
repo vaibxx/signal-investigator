@@ -9,8 +9,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&family=Syne:wght@700;800&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="style.css?v=1" />
-  <script type="module" src="app.js?v=2"></script>
+  <link rel="stylesheet" href="style.css?v=2" />
+  <script type="module" src="app.js?v=3"></script>
 </head>
 <body>
   <header class="top">
@@ -100,6 +100,12 @@
       Guardrails: the first action must be <code>score</code>. A drop under 3 points closes the alert. A bigger drop requires both <code>segments</code> and <code>mix</code> before
       <code>finish</code>. At most four actions; repeated, unknown or premature actions stop the run. The model only ever sees aggregated rates and the list of legal actions.
       The decomposition is descriptive: it assumes comparable segments in both windows and does not test statistical significance.
+    </p>
+    <p class="note">
+      Background: the <code>mix</code> tool is a rate decomposition in the style of
+      <a href="https://www.jstor.org/stable/2281213" target="_blank" rel="noopener">Kitagawa (1955)</a>, and the traffic-shift case is an instance of
+      <a href="https://doi.org/10.1111/j.2517-6161.1951.tb00088.x" target="_blank" rel="noopener">Simpson's paradox (1951)</a>.
+      <a href="https://github.com/vaibxx/signal-investigator#background-and-references" target="_blank" rel="noopener">All references ↗</a>
     </p>
   </section>
 </body>

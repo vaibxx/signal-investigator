@@ -59,3 +59,12 @@ python investigate.py --input counts.json
 ```
 
 Built-in scenarios include a within-segment regression, a traffic shift, a mixed decline, and a release below the alert threshold. The decomposition is descriptive. It assumes comparable segment definitions in both windows and positive sample counts. It does not estimate statistical significance or establish a causal explanation.
+
+## Background and references
+
+Signal Investigator applies a few well-established ideas to LLM evaluation:
+
+- **Rate decomposition.** E. M. Kitagawa, ["Components of a Difference Between Two Rates"](https://www.jstor.org/stable/2281213), *Journal of the American Statistical Association* 50(272), 1168–1194, 1955. Kitagawa split a change in an overall rate into a *composition* part and a *rate* part. The `mix` tool does the same for pass rates: old segment rates at the new traffic mix give the counterfactual, so `mix_effect + within_effect` equals the observed change. Signal uses the one-sided version (old rates, new weights); Kitagawa's symmetric form averages both windows.
+- **Simpson's paradox.** E. H. Simpson, ["The Interpretation of Interaction in Contingency Tables"](https://doi.org/10.1111/j.2517-6161.1951.tb00088.x), *Journal of the Royal Statistical Society, Series B* 13(2), 238–241, 1951. An aggregate rate can move very differently from every segment rate. The `traffic-shift` scenario is exactly this case: both segments hold steady while the overall score falls 32 points.
+- **Dataset shift.** S. Rabanser, S. Günnemann, Z. C. Lipton, ["Failing Loudly: An Empirical Study of Methods for Detecting Dataset Shift"](https://arxiv.org/abs/1810.11953), NeurIPS 2019. A change in the question mix is a form of dataset shift. Shift detectors tell you the inputs changed; Signal Investigator asks how much of a metric change that shift explains.
+- **Tool-using agents.** S. Yao et al., ["ReAct: Synergizing Reasoning and Acting in Language Models"](https://arxiv.org/abs/2210.03629), ICLR 2023. The investigation is an action → observation loop in this style, deliberately bounded: a fixed tool set, a four-step budget, and evidence rules the host enforces before any verdict.

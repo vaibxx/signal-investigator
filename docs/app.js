@@ -254,7 +254,7 @@ function renderStep(action, evidence, data, chooser, prompt) {
 }
 
 function waterfall(before, mix, within, after) {
-  const W = 640, H = 230, top = 22, base = 190, left = 40;
+  const W = 640, H = 230, top = 22, base = 190, left = 58;
   const max = Math.min(1, Math.max(before, after, before + mix, 0.05) * 1.12);
   const y = (v) => base - (v / max) * (base - top);
   const bw = 92, gap = (W - left - 4 * bw) / 4;
