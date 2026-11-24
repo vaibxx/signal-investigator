@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Signal Investigator: why did your AI's pass rate drop?</title>
+  <meta name="description" content="Your eval pass rate dropped. Is the model worse, or did users just ask harder questions? A bounded tool-using agent investigates your numbers step by step and shows every piece of evidence." />
+  <meta name="theme-color" content="#0a0806" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&family=Syne:wght@700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css?v=1" />
+  <script type="module" src="app.js?v=1"></script>
+</head>
+<body>
+  <header class="top">
+    <div class="brand">
+      <span class="logo"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12h4l3-8 4 16 3-8h6"/></svg></span>
+      <div>
+        <h1>Signal Investigator</h1>
+        <p>Why did your AI's pass rate drop?</p>
+      </div>
+    </div>
+    <div class="top-links">
+      <a href="https://github.com/vaibxx/signal-investigator" target="_blank" rel="noopener">Source</a>
+      <a href="https://vaibxx.github.io" target="_blank" rel="noopener">Made by Vaibhav</a>
+    </div>
+  </header>
+
+  <section class="hero">
+    <h2>Your eval score dropped. <span>Is the model worse, or are the questions harder?</span></h2>
+    <p>
+      If a release suddenly gets more of a hard question type, the overall pass rate falls even when the model is just as good at everything.
+      Enter your before/after counts per question type and an agent investigates with three measurement tools, then gives a verdict
+      backed by the evidence it collected.
+    </p>
+  </section>
+
+  <div class="layout">
+    <aside class="side">
+      <section class="card">
+        <div class="card-head"><h2>1 · Evaluation counts</h2><span class="pill" id="overall">–</span></div>
+        <div class="chips" id="presets"></div>
+        <div class="tablewrap">
+          <table class="counts">
+            <thead>
+              <tr><th rowspan="2">Segment</th><th colspan="2">Before</th><th colspan="2">After</th><th rowspan="2"></th></tr>
+              <tr><th>passed</th><th>total</th><th>passed</th><th>total</th></tr>
+            </thead>
+            <tbody id="rows"></tbody>
+          </table>
+        </div>
+        <div class="row">
+          <button class="btn ghost small" id="add-row" type="button">+ Add segment</button>
+          <button class="btn ghost small" id="toggle-json" type="button">Import / export JSON</button>
+        </div>
+        <div id="json-box" hidden>
+          <textarea id="json" rows="5" spellcheck="false"></textarea>
+          <div class="row"><button class="btn ghost small" id="apply-json" type="button">Load this JSON</button><span class="note" id="json-msg"></span></div>
+        </div>
+        <p class="note">A segment is any way you split your eval set: question type, language, customer tier. Counts never leave your browser unless you choose the Gemini planner, which sees only the aggregated rates.</p>
+      </section>
+
+      <section class="card">
+        <div class="card-head"><h2>2 · Planner</h2><span class="pill" id="planner-pill">Built-in</span></div>
+        <div class="seg" role="radiogroup">
+          <label><input type="radio" name="planner" value="offline" checked /> <span>Built-in<small>deterministic, no key</small></span></label>
+          <label><input type="radio" name="planner" value="gemini" /> <span>Gemini agent<small>your own key</small></span></label>
+        </div>
+        <div id="key-area" hidden>
+          <form id="key-form" autocomplete="off">
+            <input id="key-input" type="password" placeholder="Paste your Gemini API key" autocomplete="off" spellcheck="false" />
+            <button type="submit" class="btn small">Use key</button>
+          </form>
+          <p class="note">Held in this tab's memory only, sent only to Google's Gemini API, never saved. Model: <code>gemini-3.5-flash-lite</code>. <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener">Get a free key ↗</a></p>
+        </div>
+        <button class="btn run" id="run" type="button">Investigate ▶</button>
+      </section>
+    </aside>
+
+    <main class="main">
+      <div class="timeline" id="timeline">
+        <div class="empty" id="empty">
+          <div class="pulse"></div>
+          <p>Pick a preset or enter your own counts, then press <b>Investigate</b>.</p>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <section class="how">
+    <h2>How the agent works</h2>
+    <div class="how-grid">
+      <div><b>score</b><span>Overall pass rate before and after, with sample sizes.</span></div>
+      <div><b>segments</b><span>Pass rate inside each segment, and how much traffic each one got.</span></div>
+      <div><b>mix</b><span>Counterfactual: the old segment rates at the new traffic mix. Splits the drop into a mix effect and a within-segment effect.</span></div>
+      <div><b>finish</b><span>Verdict assembled only from the evidence collected.</span></div>
+    </div>
+    <p class="note">
+      Guardrails: the first action must be <code>score</code>. A drop under 3 points closes the alert. A bigger drop requires both <code>segments</code> and <code>mix</code> before
+      <code>finish</code>. At most four actions; repeated, unknown or premature actions stop the run. The model only ever sees aggregated rates and the list of legal actions.
+      The decomposition is descriptive: it assumes comparable segments in both windows and does not test statistical significance.
+    </p>
+  </section>
+</body>
+</html>

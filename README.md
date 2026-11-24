@@ -2,6 +2,12 @@
 
 A bounded, tool-using agent for investigating a drop in an AI product’s evaluation pass rate. Did answer quality fall within a segment, or did the release receive a harder mix of questions?
 
+### ▶ [Use it in your browser](https://vaibxx.github.io/signal-investigator/)
+
+Enter your own before/after evaluation counts per segment (or start from a preset) and watch the agent investigate step by step: overall score, per-segment rates and traffic share, a waterfall that splits the drop into mix and within-segment effects, then a verdict. Run it with the built-in deterministic planner, or let **Gemini choose each tool** with your own API key. The key stays in the tab's memory, goes only to Google's Gemini API, and is never stored. Every Gemini step shows exactly what the model saw: aggregated rates and the legal actions, never raw records.
+
+The browser engine ([`docs/engine.js`](docs/engine.js)) is a port of `investigate.py`. CI runs [`tests/web_parity.mjs`](tests/web_parity.mjs) on every push to check that both reach identical verdicts, evidence and errors on the built-in scenarios plus 300 random datasets.
+
 ## Reproduce a run
 
 Requires Python 3.9+. The offline planner and the test suite use the standard library.
