@@ -12,7 +12,10 @@ let rows = [];
 const $ = (s) => document.querySelector(s);
 const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 const pct = (x) => `${(x * 100).toFixed(1)}%`;
-const pts = (x) => `${x > 0 ? '+' : x < 0 ? '−' : ''}${Math.abs(x * 100).toFixed(1)} pts`;
+const pts = (x) => {
+  const v = Math.round(x * 1000) / 10; // points, 1 decimal; float noise like 1e-17 becomes 0
+  return `${v > 0 ? '+' : v < 0 ? '−' : ''}${Math.abs(v).toFixed(1)} pts`;
+};
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
 /* ---------------- counts table ---------------- */
